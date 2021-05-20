@@ -38,12 +38,12 @@ struct ToastViewIsPresentedModifier<QTContent>: ViewModifier where QTContent: Vi
       }
       // 带倒计时的不是hud 添加背景颜色
       if let dismissAfter = dismissAfter {
-        currentWindow?.backgroundColor = isBgClear ? .clear : UIColor.black.withAlphaComponent(0.5)
+        currentWindow?.backgroundColor = isBgClear ? .clear : UIColor.black.withAlphaComponent(0.3)
         DispatchQueue.main.asyncAfter(deadline: .now() + dismissAfter) {
           isPresented = false
         }
       } else {
-        currentWindow?.backgroundColor =  UIColor.black.withAlphaComponent(0.5)
+        currentWindow?.backgroundColor =  UIColor.black.withAlphaComponent(0.3)
       }
     } else {
       currentWindow?.resignKey()
