@@ -13,7 +13,7 @@ struct ToastViewIsPresentedModifier<QTContent>: ViewModifier where QTContent: Vi
   let dismissAfter: Double?
   let onDismiss: (() -> Void)?
   let content: () -> QTContent
-  let isHud: Bool
+  let isBgClear: Bool
   @State private var keyWindow: UIWindow?
   @State private var hostingVC: UIViewController?
   @State private var currentWindow: UIWindow?
@@ -29,7 +29,6 @@ struct ToastViewIsPresentedModifier<QTContent>: ViewModifier where QTContent: Vi
         currentWindow = UIWindow(windowScene: windowScene)
         currentWindow?.rootViewController = ToastViewHostingController(rootView: content())
         currentWindow?.windowLevel = .alert
-          currentWindow?.backgroundColor = isHud ? .clear : UIColor.black.withAlphaComponent(0.3)
         currentWindow?.makeKeyAndVisible()
         }
       } else {
@@ -37,10 +36,14 @@ struct ToastViewIsPresentedModifier<QTContent>: ViewModifier where QTContent: Vi
         currentWindow?.windowLevel = .alert
         currentWindow?.makeKeyAndVisible()
       }
+      // 带倒计时的不是hud 添加背景颜色
       if let dismissAfter = dismissAfter {
+        currentWindow?.backgroundColor = isBgClear ? .clear : UIColor.black.withAlphaComponent(0.5)
         DispatchQueue.main.asyncAfter(deadline: .now() + dismissAfter) {
           isPresented = false
         }
+      } else {
+        currentWindow?.backgroundColor =  UIColor.black.withAlphaComponent(0.5)
       }
     } else {
       currentWindow?.resignKey()
