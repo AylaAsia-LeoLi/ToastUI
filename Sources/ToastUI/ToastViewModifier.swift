@@ -13,45 +13,78 @@ struct ToastViewIsPresentedModifier<QTContent>: ViewModifier where QTContent: Vi
   let dismissAfter: Double?
   let onDismiss: (() -> Void)?
   let content: () -> QTContent
-
+  let isHud: Bool
   @State private var keyWindow: UIWindow?
+  @State private var hostingVC: UIViewController?
+  @State private var currentWindow: UIWindow?
 
   private func present() {
     if keyWindow == nil {
       keyWindow = UIApplication.shared.windows.first(where: \.isKeyWindow)
     }
-    var rootViewController = keyWindow?.rootViewController
-    while true {
-      if let presented = rootViewController?.presentedViewController {
-        rootViewController = presented
-      } else if let navigationController = rootViewController as? UINavigationController {
-        rootViewController = navigationController.visibleViewController
-      } else if let tabBarController = rootViewController as? UITabBarController {
-        rootViewController = tabBarController.selectedViewController
-      } else {
-        break
-      }
-    }
-
-    let toastAlreadyPresented = rootViewController is ToastViewHostingController<QTContent>
 
     if isPresented {
-      if !toastAlreadyPresented {
-        let toastViewController = ToastViewHostingController(rootView: content())
-        rootViewController?.present(toastViewController, animated: true)
-
-        if let dismissAfter = dismissAfter {
-          DispatchQueue.main.asyncAfter(deadline: .now() + dismissAfter) {
-            isPresented = false
-          }
+      if currentWindow == nil {
+        if let windowScene = keyWindow?.windowScene {
+        currentWindow = UIWindow(windowScene: windowScene)
+        currentWindow?.rootViewController = ToastViewHostingController(rootView: content())
+        currentWindow?.windowLevel = .alert
+          currentWindow?.backgroundColor = isHud ? .clear : UIColor.black.withAlphaComponent(0.3)
+        currentWindow?.makeKeyAndVisible()
+        }
+      } else {
+        currentWindow?.rootViewController = ToastViewHostingController(rootView: content())
+        currentWindow?.windowLevel = .alert
+        currentWindow?.makeKeyAndVisible()
+      }
+      if let dismissAfter = dismissAfter {
+        DispatchQueue.main.asyncAfter(deadline: .now() + dismissAfter) {
+          isPresented = false
         }
       }
     } else {
-      if toastAlreadyPresented {
-        rootViewController?.dismiss(animated: true, completion: onDismiss)
-      }
-      keyWindow = nil
+      currentWindow?.resignKey()
+      currentWindow?.isHidden = true
+      currentWindow = nil
     }
+
+//
+//    var rootViewController = keyWindow?.rootViewController
+//    while true {
+//      if let presented = rootViewController?.presentedViewController {
+//        rootViewController = presented
+//      } else if let navigationController = rootViewController as? UINavigationController {
+//        rootViewController = navigationController.visibleViewController
+//      } else if let tabBarController = rootViewController as? UITabBarController {
+//        rootViewController = tabBarController.selectedViewController
+//      } else {
+//        break
+//      }
+//    }
+//
+//    let toastAlreadyPresented = rootViewController is ToastViewHostingController<QTContent>
+//
+//    if isPresented {
+//      if !toastAlreadyPresented {
+//        let toastViewController = ToastViewHostingController(rootView: content())
+//        rootViewController?.present(toastViewController, animated: true)
+//
+//        if let dismissAfter = dismissAfter {
+//          hostingVC = toastViewController
+//          DispatchQueue.main.asyncAfter(deadline: .now() + dismissAfter) {
+//            isPresented = false
+//          }
+//        }
+//      }
+//    } else {
+//      if toastAlreadyPresented {
+//        rootViewController?.dismiss(animated: true, completion: onDismiss)
+//      } else {
+//        hostingVC?.dismiss(animated: true, completion: onDismiss)
+//        hostingVC = nil
+//      }
+//      keyWindow = nil
+//    }
   }
 
   func body(content: Content) -> some View {

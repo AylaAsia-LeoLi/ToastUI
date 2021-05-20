@@ -38,7 +38,7 @@ struct CustomizedToastWithoutToastViewExample: View {
       CustomButton("Tap me") {
         presentingToast = true
       }
-      .toast(isPresented: $presentingToast, dismissAfter: 2.0) {
+      .toast(isPresented: $presentingToast, dismissAfter: 2.0, isHud: true) {
         print("Toast dismissed")
       } content: {
         if blurBackground {
@@ -185,14 +185,14 @@ struct ShowSuccessToastAfterCompletedExample: View {
           }
         }
     }
-    .toast(isPresented: $presentingProgressView) {
+    .toast(isPresented: $presentingProgressView,isHud: false) {
       presentingSuccessView = true
       value = 0
     } content: {
       ToastView("Loading...")
         .toastViewStyle(DefiniteProgressToastViewStyle(value: $value, total: .constant(100)))
     }
-    .toast(isPresented: $presentingSuccessView, dismissAfter: 2.0) {
+    .toast(isPresented: $presentingSuccessView, dismissAfter: 2.0, isHud: true) {
       ToastView("Success")
         .toastViewStyle(SuccessToastViewStyle())
     }
@@ -255,7 +255,7 @@ struct CustomizedToastUsingToastViewStyleExample: View {
       }
     }
     .padding()
-    .toast(isPresented: $presentingToast, dismissAfter: 2.0) {
+    .toast(isPresented: $presentingToast, dismissAfter: 2.0, isHud: true) {
       ToastView("This is the logo of ToastUI") { // label
         ToastUIImage(width: 67.43) // content
       } background: {

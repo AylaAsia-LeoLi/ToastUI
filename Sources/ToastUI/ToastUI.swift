@@ -22,6 +22,7 @@ public extension View {
   func toast<Content>(
     isPresented: Binding<Bool>,
     dismissAfter: Double? = nil,
+    isHud: Bool,
     onDismiss: (() -> Void)? = nil,
     @ViewBuilder content: @escaping () -> Content
   ) -> some View where Content: View {
@@ -30,7 +31,7 @@ public extension View {
         isPresented: isPresented,
         dismissAfter: dismissAfter,
         onDismiss: onDismiss,
-        content: content
+        content: content, isHud: isHud
       )
     )
   }

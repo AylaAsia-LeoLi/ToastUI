@@ -15,7 +15,7 @@ struct IndefiniteProgressIndicatorExample: View {
     CustomButton("Tap me") {
       presentingToast = true
     }
-    .toast(isPresented: $presentingToast, dismissAfter: 2.0) {
+    .toast(isPresented: $presentingToast, dismissAfter: 2.0, isHud: true) {
       ToastView("Loading...")
         .toastViewStyle(IndefiniteProgressToastViewStyle())
     }
@@ -43,7 +43,7 @@ struct DefiniteProgressIndicatorExample: View {
           }
         }
     }
-    .toast(isPresented: $presentingToast) {
+    .toast(isPresented: $presentingToast,isHud: false) {
       value = 0
     } content: {
       ToastView("Loading...")
@@ -59,7 +59,7 @@ struct SuccessToastExample: View {
     CustomButton("Tap me") {
       presentingToast = true
     }
-    .toast(isPresented: $presentingToast, dismissAfter: 2.0) {
+    .toast(isPresented: $presentingToast, dismissAfter: 2.0, isHud: true) {
       ToastView("Success")
         .toastViewStyle(SuccessToastViewStyle())
     }
@@ -73,7 +73,7 @@ struct ErrorToastExample: View {
     CustomButton("Tap me") {
       presentingToast = true
     }
-    .toast(isPresented: $presentingToast, dismissAfter: 2.0) {
+    .toast(isPresented: $presentingToast, dismissAfter: 2.0, isHud: true) {
       ToastView("Error")
         .toastViewStyle(ErrorToastViewStyle())
     }
@@ -87,7 +87,7 @@ struct WarningToastExample: View {
     CustomButton("Tap me") {
       presentingToast = true
     }
-    .toast(isPresented: $presentingToast, dismissAfter: 2.0) {
+    .toast(isPresented: $presentingToast, dismissAfter: 2.0, isHud: true) {
       ToastView("Warning")
         .toastViewStyle(WarningToastViewStyle())
     }
@@ -101,7 +101,7 @@ struct InformationToastExample: View {
     CustomButton("Tap me") {
       presentingToast = true
     }
-    .toast(isPresented: $presentingToast, dismissAfter: 2.0) {
+    .toast(isPresented: $presentingToast, dismissAfter: 2.0, isHud: true) {
       ToastView("Information")
         .toastViewStyle(InfoToastViewStyle())
     }
@@ -126,7 +126,7 @@ struct ToastViewWithCustomBackgroundExample: View {
       CustomButton("Tap me") {
         presentingToast = true
       }
-      .toast(isPresented: $presentingToast, dismissAfter: 2.0) {
+      .toast(isPresented: $presentingToast, dismissAfter: 2.0, isHud: true) {
         ToastView {
           ToastUIImage(width: 67.43)
         } label: {
@@ -153,7 +153,7 @@ struct CustomizedAlertExample: View {
     CustomButton("Tap me") {
       presentingToast = true
     }
-    .toast(isPresented: $presentingToast) {
+    .toast(isPresented: $presentingToast,isHud: false) {
       ToastView {
         VStack {
           Text("You can create a customized alert with ToastView")
